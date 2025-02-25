@@ -1,7 +1,6 @@
 # Colour Memo
 
 Memory game with colours made with React.
-Live: https://colour-memo.netlify.app/
 
 ## Features
 
