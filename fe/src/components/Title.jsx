@@ -5,6 +5,7 @@ export default function Title() {
         <div className="title">
             <h1><span className="first-part">Colour </span>
              <span className="second-part">Memo</span></h1>
+             <i>A game to test your memory and visualizzation skills!</i>
         </div>
     )
 }

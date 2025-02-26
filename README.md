@@ -1,6 +1,6 @@
 # Colour Memo
 
-Memory game with colours made with React.
+Memory game with colours made with React and Python Django as backend.
 
 ## Features
 
