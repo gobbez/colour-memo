@@ -24,3 +24,4 @@ dist-ssr
 *.sw?
 
 be/be/secretkeys.py
+db.sqlite3

@@ -48,6 +48,7 @@ class TableUsersView(View):
         username = data.get("username")
         password = data.get("password")
 
+        """ Not used anymore
         if ask == "checkuser":
             # Check if user is registered
             try:
@@ -60,24 +61,27 @@ class TableUsersView(View):
                     return JsonResponse({"Response": False, "error": "Invalid password"}, status=400)
             except User.DoesNotExist:
                 return JsonResponse({"Response": False, "error": "User not found"}, status=400)
+        """
 
         if ask == "createuser":
+            # Create new user if not existing
             if User.objects.filter(username=username).exists():
                 return JsonResponse({"error": "User already exists"}, status=400)
 
             user = User.objects.create_user(username=username, password=password)
             TableUsers.objects.create(user=user, record_1=0, elo_1=1000, record_3=0, elo_3=1000, record_max=0, elo_max=1000)
 
-            # Genera token
+            # Generate token
             token, _ = Token.objects.get_or_create(user=user)
-            return JsonResponse({"message": "User created", "token": token.key})
+            return JsonResponse({"message": "User created", "token": token.key}, status=200)
 
         if ask == "login":
+            # Check credentials and login, passing token
             try:
                 user = User.objects.get(username=username)
                 if check_password(password, user.password):
                     token, _ = Token.objects.get_or_create(user=user)
-                    return JsonResponse({"message": "Login successful", "token": token.key})
+                    return JsonResponse({"message": "Login successful", "token": token.key}, status=200)
                 else:
                     return JsonResponse({"error": "Invalid password"}, status=403)
             except User.DoesNotExist:

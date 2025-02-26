@@ -1,21 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Provider } from "@/components/ui/provider"
-import { Toaster, toaster } from "@/components/ui/toaster"
+import { Toaster } from "@/components/ui/toaster"
 import './App.css';
 import Title from './components/Title';
 import GameComponent from './components/GameComponent';
 import Login from './components/Login';
 
-let overlayStyle = {
-  visibility: 'hidden',
-  opacity: '0%'
-};
-
-let modalStyle = {
-  transform: 'translate(0%, 0%)'
-};
-
 function App() {
+  const [userToken, setUserToken] = useState(null);
 
   return (
     <Provider>
@@ -24,8 +16,11 @@ function App() {
         <Title />
       </header>
       <main>
-        Welcome!
-        <Login />
+        {userToken ? (
+          <GameComponent token={userToken} />
+        ) : (
+          <Login onLoginSuccess={(token) => setUserToken(token)} />
+        )}
       </main>
     </Provider>
   );

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import '../App.css';
-import Title from './Title';
 import Stats from './Stats';
 import Cards from './Cards';
 import GameOver from './GameOver';
@@ -14,7 +13,7 @@ let modalStyle = {
   transform: 'translate(0%, 0%)'
 };
 
-function GameComponent() {
+function GameComponent({ token }) {
   const [level, setLevel] = useState(1);
   const [gameState, setGameState] = useState('');
   const [score, setScore] = useState(0);
@@ -77,7 +76,6 @@ function GameComponent() {
   return (
     <>
       <header>
-        <Title />
         <Stats level={level} score={score} highestScore={highestScore} />
       </header>
       <main>
