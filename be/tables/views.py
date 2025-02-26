@@ -1,10 +1,11 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import check_password
+from rest_framework.authtoken.models import Token
+from django.middleware.csrf import get_token
 from django.http import JsonResponse
 from django.views import View
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.authtoken.models import Token
 from .models import TableUsers
 import json
 
@@ -76,13 +77,26 @@ class TableUsersView(View):
             return JsonResponse({"message": "User created", "token": token.key}, status=200)
 
         if ask == "login":
-            # Check credentials and login, passing token
             try:
                 user = User.objects.get(username=username)
                 if check_password(password, user.password):
                     token, _ = Token.objects.get_or_create(user=user)
-                    return JsonResponse({"message": "Login successful", "token": token.key}, status=200)
+
+                    response = JsonResponse({"message": "Login successful"})
+                    response.set_cookie(
+                        "auth_token",
+                        token.key,
+                        httponly=True,  # 🔥 Impedisce accesso JavaScript
+                        secure=True,  # Solo su HTTPS
+                        samesite="Lax"  # Evita attacchi CSRF
+                    )
+
+                    # Aggiungiamo anche il CSRF token
+                    response["X-CSRFToken"] = get_token(request)
+
+                    return response
                 else:
                     return JsonResponse({"error": "Invalid password"}, status=403)
             except User.DoesNotExist:
                 return JsonResponse({"error": "User not found"}, status=404)
+

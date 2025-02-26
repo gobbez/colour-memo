@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useAuth } from "../AuthContext";
 import '../App.css';
 import Stats from './Stats';
 import Cards from './Cards';
@@ -13,7 +14,8 @@ let modalStyle = {
   transform: 'translate(0%, 0%)'
 };
 
-function GameComponent({ token }) {
+function GameComponent() {
+  const { userToken } = useAuth();
   const [level, setLevel] = useState(1);
   const [gameState, setGameState] = useState('');
   const [score, setScore] = useState(0);

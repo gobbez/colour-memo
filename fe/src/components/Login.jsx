@@ -2,8 +2,10 @@ import { useState } from "react";
 import { Button, Card, Flex, Input } from "@chakra-ui/react";
 import { Toaster, toaster } from "@/components/ui/toaster"
 import { Field } from "@/components/ui/field";
+import { useAuth } from "../AuthContext";
 
-function Login({ onLoginSuccess }) {
+function Login() {
+  const { setUserToken } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isRegister, setIsRegister] = useState(false);
@@ -26,6 +28,7 @@ function Login({ onLoginSuccess }) {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({
           ask: "login",
           username,
@@ -43,8 +46,8 @@ function Login({ onLoginSuccess }) {
           duration: 3000,
           isClosable: true,
         });
-        // Pass login token to App.jsx and other Components
-        onLoginSuccess(data.token);
+        // Pass login token via cookie to Auth
+        setUserToken("logged_in");
       } else {
         toaster.error({
           title: "Login Error",
@@ -55,7 +58,6 @@ function Login({ onLoginSuccess }) {
         });
       }
     } catch (error) {
-        console.log(error);
       toaster.error({
         title: "Connection Error",
         description: "Failed to contact the server. Try again.",
@@ -111,7 +113,6 @@ function Login({ onLoginSuccess }) {
         });
       }
     } catch (error) {
-        console.log(error);
       toaster.error({
         title: "Connection Error",
         description: "Failed to contact the server. Try again.",
